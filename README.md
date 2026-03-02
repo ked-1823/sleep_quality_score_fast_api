@@ -41,12 +41,14 @@ The model was trained using scikit-learn (v1.6.1) and deployed using FastAPI.
 
 pip install -r requirements.txt
 
-run app: 
 
-uvicorn main:app
 ### 
 
 ```bash
 git clone <your-repo-link>
 cd sleep_quality
+
+run app: 
+
+uvicorn main:app
 
