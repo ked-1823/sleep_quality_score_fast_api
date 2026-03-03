@@ -6,6 +6,8 @@ A Machine Learning powered REST API built using FastAPI to predict sleep quality
 
 ## 🚀 Project Overview
 
+FastAPI : https://sleep-quality-score-fast-api.onrender.com/docs
+
 This project uses a trained Scikit-Learn model to predict sleep quality based on:
 
 - Gender
