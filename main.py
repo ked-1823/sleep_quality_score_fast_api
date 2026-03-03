@@ -1,14 +1,23 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import joblib
 import pandas as pd
 
+model = joblib.load('sleep_quality_model.pkl')
 
-model=joblib.load('sleep_quality_model.pkl')  #loaded the trained model
+app = FastAPI()
 
-app = FastAPI() #created an instance of FastAPI
+# ✅ ADD THIS BLOCK HERE
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # allow frontend to access
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-class SleepData(BaseModel): #defined a Pydantic model to validate the input data
+class SleepData(BaseModel):
     Gender: str
     Age: int
     Occupation: str
@@ -21,12 +30,15 @@ class SleepData(BaseModel): #defined a Pydantic model to validate the input data
     Systolic_BP: int
     Diastolic_BP: int
 
-@app.get("/") #defined a root endpoint
+
+@app.get("/")
 def home():
     return {"message": "Welcome to the Sleep Quality Prediction API!"}
 
-@app.post("/predict") #defined a POST endpoint for making predictions
+
+@app.post("/predict")
 def predict(data: SleepData):
+
     input_df = pd.DataFrame([{
         "Gender": data.Gender,
         "Age": data.Age,
@@ -40,5 +52,7 @@ def predict(data: SleepData):
         "Systolic_BP": data.Systolic_BP,
         "Diastolic_BP": data.Diastolic_BP
     }])
-    prediction=model.predict(input_df)  #used the loaded model to make a prediction
-    return {"predicted_sleep_quality": prediction[0]}  #returned the predicted sleep quality        
+
+    prediction = model.predict(input_df)
+
+    return {"predicted_sleep_quality": prediction[0]}
